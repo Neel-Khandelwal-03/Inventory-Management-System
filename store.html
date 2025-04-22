@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stores</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #555;
+      text-align: left;
+    }
+    th {
+      background-color: #222;
+      color: #fff;
+    }
+    td {
+      background-color: #333;
+      color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="card">
+      <h2>Add Store</h2>
+      <form id="storeForm">
+        <input type="text" name="Store_No" placeholder="Store Number" required />
+        <input type="text" name="Store_Name" placeholder="Store Name" required />
+        <input type="text" name="Location" placeholder="Location" required />
+        <input type="text" name="Owner_Name" placeholder="Owner Name" required />
+        <button type="submit">Add Store</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>All Stores</h2>
+      <table id="storeTable">
+        <thead>
+          <tr>
+            <th>Store No</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Owner</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Store rows will be inserted here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    async function fetchStores() {
+      const response = await fetch('/api/stores');
+      const stores = await response.json();
+      const tableBody = document.querySelector('#storeTable tbody');
+      tableBody.innerHTML = '';
+
+      stores.forEach(store => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${store.Store_No}</td>
+          <td>${store.Store_Name}</td>
+          <td>${store.Location}</td>
+          <td>${store.Owner_Name}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    document.getElementById('storeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+
+      const response = await fetch('/add-store', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        e.target.reset();
+        fetchStores();
+      } else {
+        alert('Failed to add store');
+      }
+    });
+
+    // Load stores when page loads
+    window.onload = fetchStores;
+  </script>
+</body>
+</html>

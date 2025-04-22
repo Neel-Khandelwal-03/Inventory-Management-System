@@ -1,0 +1,98 @@
+<div class="box">
+  <h2>Warehouses</h2>
+  <input type="text" id="Warehouse_ID" placeholder="Warehouse ID">
+  <input type="text" id="Location" placeholder="Location">
+  <input type="text" id="Capacity" placeholder="Capacity">
+  <button onclick="addWarehouse()">Add Warehouse</button>
+</div>
+
+<div class="box">
+  <h2>Warehouse List</h2>
+  <table id="warehouseTable">
+    <thead>
+      <tr>
+        <th>Warehouse ID</th>
+        <th>Location</th>
+        <th>Capacity</th>
+      </tr>
+    </thead>
+    <tbody id="warehouseTableBody">
+      <!-- Populated via JavaScript -->
+    </tbody>
+  </table>
+</div>
+
+<style>
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: white;
+  }
+
+  th, td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #222;
+    font-weight: bold;
+  }
+
+  tr:nth-child(even) {
+    background-color: #2b2b2b;
+  }
+
+  tr:hover {
+    background-color: #3a3a3a;
+  }
+
+  .box {
+    margin-top: 20px;
+  }
+</style>
+
+<script>
+  async function fetchWarehouses() {
+    try {
+      const response = await fetch('/api/warehouses');
+      const data = await response.json();
+      const tbody = document.getElementById('warehouseTableBody');
+      tbody.innerHTML = '';
+      data.forEach(w => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${w.Warehouse_ID}</td>
+          <td>${w.Location}</td>
+          <td>${w.Capacity}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    } catch (error) {
+      console.error("Failed to load warehouse data:", error);
+    }
+  }
+
+  async function addWarehouse() {
+    const id = document.getElementById('Warehouse_ID').value;
+    const location = document.getElementById('Location').value;
+    const capacity = document.getElementById('Capacity').value;
+
+    const response = await fetch('/addWarehouse', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ Warehouse_ID: id, Location: location, Capacity: capacity })
+    });
+
+    if (response.ok) {
+      fetchWarehouses(); // Refresh table
+    } else {
+      alert("Error adding warehouse.");
+    }
+  }
+
+  // Load table on page load
+  window.addEventListener('DOMContentLoaded', fetchWarehouses);
+</script>

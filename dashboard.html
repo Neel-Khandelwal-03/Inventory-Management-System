@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inventory Dashboard</title>
+  <link rel="stylesheet" href="/styles/dashboard.css" />
+  <style>
+    .main section {
+      display: none;
+    }
+    .main section.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Inventory</h2>
+    <ul>
+      <li><a href="#warehouses" class="nav-link">Warehouses</a></li>
+      <li><a href="#stores" class="nav-link">Stores</a></li>
+      <li><a href="#products" class="nav-link">Products</a></li>
+      <li>
+        <a href="#" id="inventory-toggle">Inventory List ▾</a>
+        <ul id="inventory-submenu" style="display: none; padding-left: 15px;">
+          <li><a href="#" id="warehouse-inventory">Warehouse Inventory List</a></li>
+          <li><a href="#" id="store-inventory">Store Inventory List</a></li>
+        </ul>
+      </li>
+      <li><button id="logoutBtn" class="logout-button">Logout</button></li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <section id="warehouses" class="active">
+      <h2>Warehouses</h2>
+      <form id="addWarehouseForm">
+        <input type="text" name="Warehouse_ID" placeholder="Warehouse ID" required />
+        <input type="text" name="Location" placeholder="Location" required />
+        <input type="number" name="Capacity" placeholder="Capacity" required />
+        <button type="submit">Add Warehouse</button>
+      </form>      
+      <div id="warehouseList"></div>
+    </section>
+
+    <section id="stores">
+      <h2>Add Store</h2>
+      <form id="addStoreForm">
+        <input type="number" name="Store_No" placeholder="Store Number" required />
+        <input type="text" name="Store_Name" placeholder="Store Name" required />
+        <input type="text" name="Location" placeholder="Location" required />
+        <input type="text" name="Owner_Name" placeholder="Owner Name" required />
+        <button type="submit">Add Store</button>
+      </form>
+      <div id="storeList"></div>
+    </section>
+
+    <section id="products">
+      <h2>Add Product</h2>
+      <form id="addProductForm">
+        <input type="text" name="Product_ID" placeholder="Product ID" required />
+        <input type="text" name="Name" placeholder="Name" required />
+        <input type="number" name="Price" placeholder="Price" required />
+        <input type="number" name="Quantity" placeholder="Quantity" required />
+        <input type="text" name="Category" placeholder="Category" required />
+        <input type="text" name="Supplier_ID" placeholder="Supplier ID" required />
+        <input type="text" name="Warehouse_ID" placeholder="Warehouse ID" required />
+        <button type="submit">Add Product</button>
+      </form>
+
+      <h2>Transfer Product</h2>
+      <form id="transferProductForm">
+        <input type="number" name="Product_ID" placeholder="Product ID" required>
+        <select name="from_type" required>
+          <option value="">From Type</option>
+          <option value="store">Store</option>
+          <option value="warehouse">Warehouse</option>
+        </select>
+        <input type="number" name="from_id" placeholder="From Store/Warehouse ID" required>
+        <select name="to_type" required>
+          <option value="">To Type</option>
+          <option value="store">Store</option>
+          <option value="warehouse">Warehouse</option>
+        </select>
+        <input type="number" name="to_id" placeholder="To Store/Warehouse ID" required>
+        <input type="number" name="quantity" placeholder="Quantity to Transfer" required min="1">
+        <button type="submit">Transfer Product</button>
+      </form>
+
+      <h2>Product List</h2>
+      <div id="productList">
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; color: white; background-color: #1f1f1f;">
+          <thead>
+            <tr>
+              <th style="padding: 10px; border: 1px solid #444; background-color: #2a2a2a;">Product ID</th>
+              <th style="padding: 10px; border: 1px solid #444; background-color: #2a2a2a;">Name</th>
+              <th style="padding: 10px; border: 1px solid #444; background-color: #2a2a2a;">Price</th>
+              <th style="padding: 10px; border: 1px solid #444; background-color: #2a2a2a;">Quantity</th>
+              <th style="padding: 10px; border: 1px solid #444; background-color: #2a2a2a;">Category</th>
+              <th style="padding: 10px; border: 1px solid #444; background-color: #2a2a2a;">Supplier ID</th>
+            </tr>
+          </thead>
+          <tbody id="productTableBody">
+            <!-- Table rows will be populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="inventory-section">
+      <h2>Warehouse Inventory List</h2>
+      <div id="warehouseInventoryList"></div>
+    </section>
+
+    <section id="store-inventory-section">
+      <h2>Store Inventory List</h2>
+      <div id="storeInventoryList"></div>
+    </section>
+  </div>
+
+  <script src="/scripts/dashboard.js"></script>
+</body>
+</html>
